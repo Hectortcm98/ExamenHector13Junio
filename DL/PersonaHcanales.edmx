@@ -5,6 +5,22 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="Ejercicio13JunioModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Banco">
+          <Key>
+            <PropertyRef Name="IdBanco" />
+          </Key>
+          <Property Name="IdBanco" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NombreBanco" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Cuenta">
+          <Key>
+            <PropertyRef Name="IdCuenta" />
+          </Key>
+          <Property Name="IdCuenta" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NumeroCuenta" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="IdBanco" Type="int" />
+          <Property Name="IdPersona" Type="int" />
+        </EntityType>
         <EntityType Name="Persona">
           <Key>
             <PropertyRef Name="IdPersona" />
@@ -21,6 +37,35 @@
           <Property Name="Ocupacion" Type="varchar" MaxLength="30" />
           <Property Name="TipoPersonaFisica" Type="varchar" MaxLength="30" />
         </EntityType>
+        <Association Name="FK__Cuenta__IdBanco__22AA2996">
+          <End Role="Banco" Type="Self.Banco" Multiplicity="0..1" />
+          <End Role="Cuenta" Type="Self.Cuenta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Banco">
+              <PropertyRef Name="IdBanco" />
+            </Principal>
+            <Dependent Role="Cuenta">
+              <PropertyRef Name="IdBanco" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Cuenta__IdPerson__239E4DCF">
+          <End Role="Persona" Type="Self.Persona" Multiplicity="0..1" />
+          <End Role="Cuenta" Type="Self.Cuenta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Persona">
+              <PropertyRef Name="IdPersona" />
+            </Principal>
+            <Dependent Role="Cuenta">
+              <PropertyRef Name="IdPersona" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="AddCuenta" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="NumeroCuenta" Type="varchar" Mode="In" />
+          <Parameter Name="IdBanco" Type="int" Mode="In" />
+          <Parameter Name="IdPersona" Type="int" Mode="In" />
+        </Function>
         <Function Name="AddPersonas" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Nombre" Type="varchar" Mode="In" />
           <Parameter Name="ApellidoPaterno" Type="varchar" Mode="In" />
@@ -46,6 +91,7 @@
           <Parameter Name="Ocupacion" Type="varchar" Mode="In" />
           <Parameter Name="TipoPersonaFisica" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="GetAllCuentas" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GetAllPersona" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GetByIdPersona" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="IdPersona" Type="int" Mode="In" />
@@ -67,7 +113,17 @@
           <Parameter Name="TipoPersonaFisica" Type="varchar" Mode="In" />
         </Function>
         <EntityContainer Name="Ejercicio13JunioModelStoreContainer">
+          <EntitySet Name="Banco" EntityType="Self.Banco" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cuenta" EntityType="Self.Cuenta" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Persona" EntityType="Self.Persona" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Cuenta__IdBanco__22AA2996" Association="Self.FK__Cuenta__IdBanco__22AA2996">
+            <End Role="Banco" EntitySet="Banco" />
+            <End Role="Cuenta" EntitySet="Cuenta" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Cuenta__IdPerson__239E4DCF" Association="Self.FK__Cuenta__IdPerson__239E4DCF">
+            <End Role="Persona" EntitySet="Persona" />
+            <End Role="Cuenta" EntitySet="Cuenta" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -88,6 +144,7 @@
           <Property Name="RFC" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Ocupacion" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="TipoPersonaFisica" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Cuentas" Relationship="Ejercicio13JunioModel.FK__Cuenta__IdPerson__239E4DCF" FromRole="Persona" ToRole="Cuenta" />
         </EntityType>
         <EntityContainer Name="Ejercicio13JunioEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Personas" EntityType="Self.Persona" />
@@ -118,10 +175,10 @@
             <Parameter Name="TipoPersonaFisica" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="GetByIdPersona" ReturnType="Collection(Ejercicio13JunioModel.GetByIdPersona_Result)">
-            <Parameter Name="IdPersona" Mode="In" Type="Int32" />
+          <Parameter Name="IdPersona" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetByIdPersonas" ReturnType="Collection(Ejercicio13JunioModel.GetByIdPersonas_Result)">
-            <Parameter Name="IdPersona" Mode="In" Type="Int32" />
+          <Parameter Name="IdPersona" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="UpdatePersona">
             <Parameter Name="IdPersona" Mode="In" Type="Int32" />
@@ -136,6 +193,22 @@
             <Parameter Name="Ocupacion" Mode="In" Type="String" />
             <Parameter Name="TipoPersonaFisica" Mode="In" Type="String" />
           </FunctionImport>
+          <EntitySet Name="Bancoes" EntityType="Ejercicio13JunioModel.Banco" />
+          <EntitySet Name="Cuentas" EntityType="Ejercicio13JunioModel.Cuenta" />
+          <AssociationSet Name="FK__Cuenta__IdBanco__22AA2996" Association="Ejercicio13JunioModel.FK__Cuenta__IdBanco__22AA2996">
+            <End Role="Banco" EntitySet="Bancoes" />
+            <End Role="Cuenta" EntitySet="Cuentas" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Cuenta__IdPerson__239E4DCF" Association="Ejercicio13JunioModel.FK__Cuenta__IdPerson__239E4DCF">
+            <End Role="Persona" EntitySet="Personas" />
+            <End Role="Cuenta" EntitySet="Cuentas" />
+          </AssociationSet>
+          <FunctionImport Name="AddCuenta">
+            <Parameter Name="NumeroCuenta" Mode="In" Type="String" />
+            <Parameter Name="IdBanco" Mode="In" Type="Int32" />
+            <Parameter Name="IdPersona" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetAllCuentas" ReturnType="Collection(Ejercicio13JunioModel.GetAllCuentas_Result)" />
         </EntityContainer>
         <ComplexType Name="GetAllPersona_Result">
           <Property Type="Int32" Name="IdPersona" Nullable="false" />
@@ -175,6 +248,60 @@
           <Property Type="String" Name="RFC" Nullable="false" MaxLength="20" />
           <Property Type="String" Name="Ocupacion" Nullable="true" MaxLength="30" />
           <Property Type="String" Name="TipoPersonaFisica" Nullable="true" MaxLength="30" />
+        </ComplexType>
+        <EntityType Name="Banco">
+          <Key>
+            <PropertyRef Name="IdBanco" />
+          </Key>
+          <Property Name="IdBanco" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NombreBanco" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Cuentas" Relationship="Ejercicio13JunioModel.FK__Cuenta__IdBanco__22AA2996" FromRole="Banco" ToRole="Cuenta" />
+        </EntityType>
+        <EntityType Name="Cuenta">
+          <Key>
+            <PropertyRef Name="IdCuenta" />
+          </Key>
+          <Property Name="IdCuenta" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NumeroCuenta" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="IdBanco" Type="Int32" />
+          <Property Name="IdPersona" Type="Int32" />
+          <NavigationProperty Name="Banco" Relationship="Ejercicio13JunioModel.FK__Cuenta__IdBanco__22AA2996" FromRole="Cuenta" ToRole="Banco" />
+          <NavigationProperty Name="Persona" Relationship="Ejercicio13JunioModel.FK__Cuenta__IdPerson__239E4DCF" FromRole="Cuenta" ToRole="Persona" />
+        </EntityType>
+        <Association Name="FK__Cuenta__IdBanco__22AA2996">
+          <End Type="Ejercicio13JunioModel.Banco" Role="Banco" Multiplicity="0..1" />
+          <End Type="Ejercicio13JunioModel.Cuenta" Role="Cuenta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Banco">
+              <PropertyRef Name="IdBanco" />
+            </Principal>
+            <Dependent Role="Cuenta">
+              <PropertyRef Name="IdBanco" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Cuenta__IdPerson__239E4DCF">
+          <End Type="Ejercicio13JunioModel.Persona" Role="Persona" Multiplicity="0..1" />
+          <End Type="Ejercicio13JunioModel.Cuenta" Role="Cuenta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Persona">
+              <PropertyRef Name="IdPersona" />
+            </Principal>
+            <Dependent Role="Cuenta">
+              <PropertyRef Name="IdPersona" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="GetAllCuentas_Result">
+          <Property Type="Int32" Name="IdPersona" Nullable="false" />
+          <Property Type="String" Name="Nombre" Nullable="false" MaxLength="30" />
+          <Property Type="String" Name="ApellidoPaterno" Nullable="false" MaxLength="30" />
+          <Property Type="String" Name="ApellidoMaterno" Nullable="false" MaxLength="30" />
+          <Property Type="String" Name="RFC" Nullable="false" MaxLength="20" />
+          <Property Type="Int32" Name="IdCuenta" Nullable="true" />
+          <Property Type="String" Name="NumeroCuenta" Nullable="true" MaxLength="20" />
+          <Property Type="Int32" Name="IdBanco" Nullable="true" />
+          <Property Type="String" Name="NombreBanco" Nullable="true" MaxLength="20" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -253,6 +380,40 @@
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="UpdatePersona" FunctionName="Ejercicio13JunioModel.Store.UpdatePersona" />
+          <EntitySetMapping Name="Bancoes">
+            <EntityTypeMapping TypeName="Ejercicio13JunioModel.Banco">
+              <MappingFragment StoreEntitySet="Banco">
+                <ScalarProperty Name="NombreBanco" ColumnName="NombreBanco" />
+                <ScalarProperty Name="IdBanco" ColumnName="IdBanco" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cuentas">
+            <EntityTypeMapping TypeName="Ejercicio13JunioModel.Cuenta">
+              <MappingFragment StoreEntitySet="Cuenta">
+                <ScalarProperty Name="IdPersona" ColumnName="IdPersona" />
+                <ScalarProperty Name="IdBanco" ColumnName="IdBanco" />
+                <ScalarProperty Name="NumeroCuenta" ColumnName="NumeroCuenta" />
+                <ScalarProperty Name="IdCuenta" ColumnName="IdCuenta" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="AddCuenta" FunctionName="Ejercicio13JunioModel.Store.AddCuenta" />
+          <FunctionImportMapping FunctionImportName="GetAllCuentas" FunctionName="Ejercicio13JunioModel.Store.GetAllCuentas">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Ejercicio13JunioModel.GetAllCuentas_Result">
+                <ScalarProperty Name="IdPersona" ColumnName="IdPersona" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+                <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+                <ScalarProperty Name="RFC" ColumnName="RFC" />
+                <ScalarProperty Name="IdCuenta" ColumnName="IdCuenta" />
+                <ScalarProperty Name="NumeroCuenta" ColumnName="NumeroCuenta" />
+                <ScalarProperty Name="IdBanco" ColumnName="IdBanco" />
+                <ScalarProperty Name="NombreBanco" ColumnName="NombreBanco" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

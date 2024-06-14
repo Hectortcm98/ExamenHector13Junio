@@ -1,0 +1,198 @@
+﻿@model  ML.Persona
+
+@{
+    ViewBag.Title = "GetAll";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<br />
+<div class="container">
+    <table id="personaTable" class="table table-responsive table-bordered">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>ApellidoPaterno</th>
+                <th>ApellidoMaterno</th>
+                <th>RFC</th>
+                <th>Numero de Cuenta</th>
+                <th>Nombre del Banco</th>
+                <th>Asignar</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+
+<div id="myModal" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Agregar Cuenta</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col-12">
+                    <input type="hidden" id="txtIdPersona" value="" />
+                    <label for="txtNumeroCuenta">Numero de cuenta</label>
+                    <input type="text" class="form-control" id="txtNumeroCuenta" />
+                </div>
+                <div class="col-12">
+                    <label for="ddlBancos">Bancos</label>
+                    <select class="form-control" id="ddlBancos">
+                        <!-- Aquí puedes agregar opciones de bancos si es necesario -->
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button id="btnAgregar" type="button" class="btn btn-primary" onclick="agregar()">Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+
+            // Llamar a la función cargarPersonas al cargar la página
+            cargarPersonas();
+            cargarBancos();
+            // Manejar el evento de clic en el botón Agregar
+            $("#agregarBtn").click(function () {
+                window.location.href = "@Url.Action("Form", "Persona")";
+            });
+
+            // Manejar el evento de clic en el botón Eliminar
+            $(document).on("click", ".eliminarBtn", function () {
+                var idPersona = $(this).data("id");
+                if (confirm("¿Estás seguro de que deseas eliminar este registro?")) {
+                    $.ajax({
+                        url: "@Url.Action("Delete", "Persona")",
+                        type: "POST",
+                        data: { idPersona: idPersona },
+                        success: function () {
+                            // Recargar los datos después de eliminar un registro
+                            cargarPersonas();
+                        },
+                        error: function () {
+                            alert("Error al eliminar el registro.");
+                        }
+                    });
+                }
+            });
+        });
+
+         // Función para cargar los datos de las personas mediante AJAX
+ function cargarPersonas() {
+     $.ajax({
+         url: "@Url.Action("Get", "Cuenta")",
+         type: "GET",
+         dataType: "json",
+         success: function (data) {
+             // Limpiar la tabla antes de agregar nuevos datos
+             $("#personaTable tbody").empty();
+             // Iterar sobre los datos y agregarlos a la tabla
+             $.each(data.ListCuenta, function (i, cuenta) {
+                 var tr = $("<tr>");
+                 tr.append("<td>" + cuenta.Persona.Nombre + "</td>");
+                 tr.append("<td>" + cuenta.Persona.ApellidoPaterno + "</td>");
+                 tr.append("<td>" + cuenta.Persona.ApellidoMaterno + "</td>");
+                 tr.append("<td>" + cuenta.Persona.RFC + "</td>");
+                 tr.append("<td>" + cuenta.NumeroCuenta + "</td>");
+                 tr.append("<td>" + cuenta.Banco.Nombre + "</td>");
+                 tr.append("<td><button onclick='ShowModal(" + cuenta.Persona.IdPersona + ")' class='btn btn-info' id='btnAsignar'>Asignar</button></td>");
+                 tr.append("</tr>")
+                 $("#personaTable tbody").append(tr);
+             });
+         },
+         error: function () {
+             alert("Error al cargar los datos de las personas.");
+         }
+     });
+        }
+
+        function ShowModal(idPersona) {
+            $('#myModal').modal('show'); 
+            $('#txtIdPersona').val(idPersona);
+        }
+
+         function cargarBancos() {
+     $.ajax({
+         url: "@Url.Action("GetAllBanco", "Cuenta")",
+         type: "GET",
+         dataType: "json",
+         success: function (banco) {
+             $('#ddlBancos').append('<option value= 0> Seleccione una opcion</option');
+             $.each(banco.BancoList, function (i, objBancos ) {
+                 $('#ddlBancos').append('<option value=' + objBancos.IdBanco + '>' + objBancos.Nombre + '</option');
+             })
+         }
+     });
+        }
+
+
+
+
+        function agregar() {
+
+            var cuenta = {
+                "NumeroCuenta" : $("#txtNumeroCuenta").val(),
+                "Banco": {
+                    "IdBanco": $("#ddlBancos").val()
+                },
+                "Persona": {
+                    "IdPersona": $("#txtIdPersona").val()
+                }
+            }
+
+
+        $.ajax({
+            url: '@Url.Action("AddCuenta", "Cuenta")',
+            type: "POST",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(cuenta),
+            success: function () {
+
+                //$('#myModal')[0].reset();
+
+                alert("Se ha agregado correctamente.");
+            },
+            error: function() {
+
+                alert("Error al agregar  Por favor, inténtalo de nuevo.");
+            }
+        });
+    }
+
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

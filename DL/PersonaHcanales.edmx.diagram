@@ -4,8 +4,12 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="f04ecced59c3427fae28eb991fc530fe" Name="Diagram1">
+      <Diagram DiagramId="f04ecced59c3427fae28eb991fc530fe" Name="Diagram1" ZoomLevel="86">
         <EntityTypeShape EntityType="Ejercicio13JunioModel.Persona" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Ejercicio13JunioModel.Banco" Width="1.5" PointX="0.75" PointY="5.625" />
+        <EntityTypeShape EntityType="Ejercicio13JunioModel.Cuenta" Width="1.5" PointX="3" PointY="1.375" />
+        <AssociationConnector Association="Ejercicio13JunioModel.FK__Cuenta__IdBanco__22AA2996" />
+        <AssociationConnector Association="Ejercicio13JunioModel.FK__Cuenta__IdPerson__239E4DCF" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

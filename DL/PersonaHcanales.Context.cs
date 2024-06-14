@@ -28,6 +28,8 @@ namespace DL
         }
     
         public virtual DbSet<Persona> Personas { get; set; }
+        public virtual DbSet<Banco> Bancoes { get; set; }
+        public virtual DbSet<Cuenta> Cuentas { get; set; }
     
         public virtual ObjectResult<GetAllPersona_Result> GetAllPersona()
         {
@@ -193,6 +195,28 @@ namespace DL
                 new ObjectParameter("TipoPersonaFisica", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("UpdatePersona", idPersonaParameter, nombreParameter, apellidoPaternoParameter, apellidoMaternoParameter, fechaNacimientoParameter, paisOrigenParameter, sexoParameter, cURPParameter, rFCParameter, ocupacionParameter, tipoPersonaFisicaParameter);
+        }
+    
+        public virtual int AddCuenta(string numeroCuenta, Nullable<int> idBanco, Nullable<int> idPersona)
+        {
+            var numeroCuentaParameter = numeroCuenta != null ?
+                new ObjectParameter("NumeroCuenta", numeroCuenta) :
+                new ObjectParameter("NumeroCuenta", typeof(string));
+    
+            var idBancoParameter = idBanco.HasValue ?
+                new ObjectParameter("IdBanco", idBanco) :
+                new ObjectParameter("IdBanco", typeof(int));
+    
+            var idPersonaParameter = idPersona.HasValue ?
+                new ObjectParameter("IdPersona", idPersona) :
+                new ObjectParameter("IdPersona", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("AddCuenta", numeroCuentaParameter, idBancoParameter, idPersonaParameter);
+        }
+    
+        public virtual ObjectResult<GetAllCuentas_Result> GetAllCuentas()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllCuentas_Result>("GetAllCuentas");
         }
     }
 }

@@ -12,25 +12,16 @@ namespace DL
     using System;
     using System.Collections.Generic;
     
-    public partial class Persona
+    public partial class Banco
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Persona()
+        public Banco()
         {
             this.Cuentas = new HashSet<Cuenta>();
         }
     
-        public int IdPersona { get; set; }
-        public string Nombre { get; set; }
-        public string ApellidoPaterno { get; set; }
-        public string ApellidoMaterno { get; set; }
-        public Nullable<System.DateTime> FechaNacimiento { get; set; }
-        public string PaisOrigen { get; set; }
-        public string Sexo { get; set; }
-        public string CURP { get; set; }
-        public string RFC { get; set; }
-        public string Ocupacion { get; set; }
-        public string TipoPersonaFisica { get; set; }
+        public int IdBanco { get; set; }
+        public string NombreBanco { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Cuenta> Cuentas { get; set; }
