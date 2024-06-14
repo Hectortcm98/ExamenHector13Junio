@@ -1,0 +1,158 @@
+﻿@model ML.Persona
+@{
+    ViewBag.Title = "Form";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div style="text-align:center;">
+    <h2>Datos de la Persona</h2>
+</div>
+
+
+
+@using (Html.BeginForm("Form", "Persona", FormMethod.Post, new { id = "formulario_contacto", enctype = "multipart/form-data" }))
+{
+
+    <div style="display: flex; flex-wrap: wrap;" id="Form">
+        <div style="flex-basis: 33.33%; padding: 5px;">
+
+      
+
+            @Html.HiddenFor(model => model.IdPersona)
+
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="margin-bottom: 10px;">
+                    <label style="text-align: center;">
+                        @Html.LabelFor(model => model.Nombre)
+                    </label>
+                </div>
+                @Html.TextBoxFor(model => model.Nombre, new { @id = "ddlNombre" })
+            </div>
+
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="margin-bottom: 10px;">
+                    <label style="text-align: center;">
+                        @Html.LabelFor(model => model.ApellidoPaterno)
+                    </label>
+                </div>
+                @Html.TextBoxFor(model => model.ApellidoPaterno)
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="margin-bottom: 10px;">
+                    <label style="text-align: center;">
+                        @Html.LabelFor(model => model.ApellidoMaterno)
+                    </label>
+                </div>
+                @Html.TextBoxFor(model => model.ApellidoMaterno)
+            </div>
+        </div>
+
+        <div style="flex-basis: 33.33%; padding: 5px;">
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="margin-bottom: 10px;">
+                    <label style="text-align: center;">
+                        @Html.LabelFor(model => model.FechaNacimineto)
+                    </label>
+                </div>
+                @Html.TextBoxFor(model => model.FechaNacimineto, new { @class = "", @placeholder = "FechaNacimiento", @type = "date" })
+            </div>
+
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="margin-bottom: 10px;">
+                    <label style="text-align: center;">
+                        @Html.LabelFor(model => model.PaisOrigen)
+                    </label>
+                </div>
+                @Html.TextBoxFor(model => model.PaisOrigen)
+            </div>
+
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="margin-bottom: 10px;">
+                    <label style="text-align: center;">
+                        @Html.LabelFor(model => model.Sexo)
+                    </label>
+                </div>
+                @Html.TextBoxFor(model => model.Sexo)
+            </div>
+        </div>
+
+        <div style="flex-basis: 33.33%; padding: 5px;">
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="margin-bottom: 10px;">
+                    <label style="text-align: center;">
+                        @Html.LabelFor(model => model.CURP)
+                    </label>
+                </div>
+                @Html.TextBoxFor(model => model.CURP)
+            </div>
+
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="margin-bottom: 10px;">
+                    <label style="text-align: center;">
+                        @Html.LabelFor(model => model.RFC)
+                    </label>
+                </div>
+                @Html.TextBoxFor(model => model.RFC)
+            </div>
+
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="margin-bottom: 10px;">
+                    <label style="text-align: center;">
+                        @Html.LabelFor(model => model.Ocupacion)
+                    </label>
+                </div>
+                @Html.TextBoxFor(model => model.Ocupacion)
+            </div>
+
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="margin-bottom: 10px;">
+                    <label style="text-align: center;">
+                        @Html.LabelFor(model => model.TipoPersonaFisica)
+                    </label>
+                </div>
+                @Html.TextBoxFor(model => model.TipoPersonaFisica)
+            </div>
+        </div>
+
+    </div>
+
+    <br />
+    @*<div style="text-align: center; margin-top: 20px;">
+            <button type="submit" style="padding: 5px 60px; font-size: 16px;" class="btn btn-outline-primary btn-s">Save</button>
+        </div>*@
+
+    <div style="text-align: center; margin-top: 30px;">
+        <button type="button" class="btn btn-outline-success" id="btnenviar" name="btnenviar">Guardar</button>
+    </div>
+}
+
+@Scripts.Render("~/bundles/jquery")
+
+
+<script>
+$(document).ready(function () {
+    $('#btnenviar').on("click", function () {
+        var formData = $('#formulario_contacto').serialize();
+
+        $.ajax({
+            url: '@Url.Action("AddPersona", "Persona")',
+            type: "POST",
+            data: formData,
+            dataType: 'json',
+            success: function () {
+                
+                $('#formulario_contacto')[0].reset();
+                
+                alert("Persona agregada correctamente.");
+            },
+            error: function() {
+               
+                alert("Error al agregar persona. Por favor, inténtalo de nuevo.");
+            }
+        });
+    });
+});
+</script>
+
+
+
