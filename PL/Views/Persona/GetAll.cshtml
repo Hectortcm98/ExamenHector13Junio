@@ -4,7 +4,16 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>GetAll</h2>
+<style>
+    body {
+        background-color: #c5d7ff;
+    }
+    h2{
+        text-align:center;
+    }
+</style>
+
+<h2>Registro de las personas </h2>
 
 <div class="row" style="text-align:right;">
     <div class="col-md-12">
@@ -13,44 +22,44 @@
 </div>
 
 <br />
-<div class="container">
-    <table class="table table-responsive table-bordered">
+<div class="container" >
+    <table class="table table- table-hover table-bordered border border-primary  border-3">
         <thead>
-            <tr>
-                <td></td>
-                <td>IdPersona</td>
-                <td>Nombre</td>
-                <td>ApellidoPaterno</td>
-                <td>ApellidoMaterno</td>
-                <td>FechaNacimiento</td>
-                <td>PaisOrigen</td>
-                <td>Sexo</td>
-                <td>CURP</td>
-                <td>RFC</td>
-                <td>Ocupacion</td>
-                <td>TipoPersonaFisica</td>
-                <td></td>
+            <tr class="text-center" style="font-size: smaller;">
+                <th></th> 
+                @*<th style="font-size: smaller;">IdPersona</th>*@
+                <th style="font-size: smaller;">Nombre</th>
+                @*<th style="font-size: smaller;">ApellidoPaterno</th>
+                <th style="font-size: smaller;">ApellidoMaterno</th>*@
+                <th style="font-size: smaller;">Fecha de Nacimiento</th>
+                <th style="font-size: smaller;">Pais de Origen</th>
+                <th style="font-size: smaller;">Sexo</th>
+                <th style="font-size: smaller;">CURP</th>
+                <th style="font-size: smaller;">RFC</th>
+                <th style="font-size: smaller;">Ocupacion</th>
+                <th style="font-size: smaller;">Tipo de persona moral</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
 
             @foreach (ML.Persona persona in Model.PersonaList)
             {
-                <tr>
+                <tr class="text-center">
                     <th>
                         <a class="btn btn-secondary" style="background-color: #FFFFFF;" href="@Url.Action("Form", "Persona" , new { idPersona = persona.IdPersona}) "> <img src="~/Controllers/Img/editar.png" alt="Editar" style="width: 30px; height: 30px;" /></a>
                     </th>
-                    <th>@persona.IdPersona</th>
-                    <th>@persona.Nombre</th>
-                    <th>@persona.ApellidoPaterno</th>
-                    <th>@persona.ApellidoMaterno</th>
-                    <th>@persona.FechaNacimineto</th>
-                    <th>@persona.PaisOrigen</th>
-                    <th>@persona.Sexo</th>
-                    <th>@persona.CURP</th>
-                    <th>@persona.RFC</th>
-                    <th>@persona.Ocupacion</th>
-                    <th>@persona.TipoPersonaFisica</th>
+                    @*<td style="font-size: smaller;"> @persona.IdPersona</td>*@
+                    <td style="font-size: smaller;">@persona.Nombre @persona.ApellidoPaterno @persona.ApellidoMaterno </td>
+                    @*<th style="font-size: smaller;">@persona.ApellidoPaterno</th>
+                    <th style="font-size: smaller;">@persona.ApellidoMaterno</th>*@
+                    <td style="font-size: smaller;">@persona.FechaNacimineto.ToString("dd/mm/yyyy")</td>
+                    <td style="font-size: smaller;">@persona.PaisOrigen</td>
+                    <td style="font-size: smaller;">@persona.Sexo</td>
+                    <td style="font-size: smaller;">@persona.CURP</td>
+                    <td style="font-size: smaller;">@persona.RFC</td>
+                    <td style="font-size: smaller;">@persona.Ocupacion</td>
+                    <td style="font-size: smaller;">@persona.TipoPersonaFisica</td>
 
                     <th>
                         <a class="btn btn-primary" style="background-color: #FFFFFF;" onclick="return confirm('¿Estás seguro de que deseas eliminar esta registro?');"

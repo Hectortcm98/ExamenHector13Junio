@@ -6,12 +6,19 @@
 }
 
 
+<style>
+    body {
+        background-color: #c5d7ff;
+    }
+</style>
 
 <br />
+<input type="hidden" id="txtIdCuenta" value="" />
 <div class="container">
-    <table id="personaTable" class="table table-responsive table-bordered">
+    <table id="personaTable" class="table table- table-hover table-bordered border border-primary  border-3">
         <thead>
-            <tr>
+            <tr class="text-center" style="font-size: smaller;">
+                <th>Eliminar</th>
                 <th>Nombre</th>
                 <th>ApellidoPaterno</th>
                 <th>ApellidoMaterno</th>
@@ -26,23 +33,23 @@
 </div>
 
 
-<div id="myModal" class="modal" tabindex="-1">
+<div id="myModal" class="modal" tabindex="-1" style="background-color:;">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content" style="background-color: #0ba5a3 ">
             <div class="modal-header">
-                <h5 class="modal-title">Agregar Cuenta</h5>
+                <h5 class="modal-title" style="margin-left:auto;" >Agregar Cuenta <i class="bi bi-cash-coin"></i></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="col-12">
                     <input type="hidden" id="txtIdPersona" value="" />
                     <label for="txtNumeroCuenta">Numero de cuenta</label>
-                    <input type="text" class="form-control" id="txtNumeroCuenta" />
+
+                    <input type="text" class="form-control" id="txtNumeroCuenta" placeholder="Ingrese el Número de cuenta " />
                 </div>
                 <div class="col-12">
                     <label for="ddlBancos">Bancos</label>
                     <select class="form-control" id="ddlBancos">
-                        <!-- Aquí puedes agregar opciones de bancos si es necesario -->
                     </select>
                 </div>
             </div>
@@ -53,6 +60,7 @@
         </div>
     </div>
 </div>
+
 
 
 
@@ -99,15 +107,27 @@
              $("#personaTable tbody").empty();
              // Iterar sobre los datos y agregarlos a la tabla
              $.each(data.ListCuenta, function (i, cuenta) {
+
                  var tr = $("<tr>");
-                 tr.append("<td>" + cuenta.Persona.Nombre + "</td>");
-                 tr.append("<td>" + cuenta.Persona.ApellidoPaterno + "</td>");
-                 tr.append("<td>" + cuenta.Persona.ApellidoMaterno + "</td>");
+                 if (cuenta.Banco.IdBanco > 0) {
+                     tr.append("<td style=text-align:center;><button onclick='Delete(" + cuenta.IdCuenta + ")' class='btn btn-danger' id='btnEliminar'>Eliminar</button></td>"); 
+                 } else {
+                     tr.append("<td style=font-size:10px>No es posible eliminar</td>");
+                 }       
+                            
+                 tr.append("<td>" + cuenta.Persona.Nombre + "</td>" );
+                 tr.append("<td>" + cuenta.Persona.ApellidoPaterno + "</td>" );
+                 tr.append("<td>" + cuenta.Persona.ApellidoMaterno + "</td>" );
                  tr.append("<td>" + cuenta.Persona.RFC + "</td>");
                  tr.append("<td>" + cuenta.NumeroCuenta + "</td>");
                  tr.append("<td>" + cuenta.Banco.Nombre + "</td>");
-                 tr.append("<td><button onclick='ShowModal(" + cuenta.Persona.IdPersona + ")' class='btn btn-info' id='btnAsignar'>Asignar</button></td>");
-                 tr.append("</tr>")
+
+                 if (cuenta.Banco.IdBanco < 1) {
+                     tr.append("<td style=text-align:center;><button onclick='ShowModal(" + cuenta.Persona.IdPersona + ")' class='btn btn-info' id='btnAsignar'>Asignar</button></td>");
+                 } else {
+                     tr.append("<td  style=font-size:10px>No es posible asignar</td>");
+                 }       
+                 tr.append("</tr>" )
                  $("#personaTable tbody").append(tr);
              });
          },
@@ -118,7 +138,7 @@
         }
 
         function ShowModal(idPersona) {
-            $('#myModal').modal('show'); 
+            $('#myModal').modal('show');
             $('#txtIdPersona').val(idPersona);
         }
 
@@ -138,7 +158,6 @@
 
 
 
-
         function agregar() {
 
             var cuenta = {
@@ -151,7 +170,6 @@
                 }
             }
 
-
         $.ajax({
             url: '@Url.Action("AddCuenta", "Cuenta")',
             type: "POST",
@@ -160,8 +178,6 @@
             data: JSON.stringify(cuenta),
             success: function () {
 
-                //$('#myModal')[0].reset();
-
                 alert("Se ha agregado correctamente.");
             },
             error: function() {
@@ -169,15 +185,38 @@
                 alert("Error al agregar  Por favor, inténtalo de nuevo.");
             }
         });
-    }
+        }
 
-    </script>
+       function Delete(idCuenta) {
+    if (confirm("¿Estás seguro de que deseas eliminar esta cuenta?")) {
+        $.ajax({
+            url: '@Url.Action("Delete","Cuenta")',
+            type: 'POST',
+            dataType: 'json',
+            data: { IdCuenta: idCuenta },
+            success: function (result) {
+                if (result === true) {
+                    alert("La cuenta se eliminó correctamente.");
+                    // Aquí podrías recargar la tabla de personas si es necesario
+                    cargarPersonas(); // Suponiendo que tienes una función para cargar las personas nuevamente
+                } else {
+                    alert("No se pudo eliminar la cuenta.");
+                }
+            },
+            error: function () {
+                alert("Error al intentar eliminar la cuenta.");
+            }
+        });
+    }
 }
 
 
 
+    </script>
 
 
+
+}
 
 
 

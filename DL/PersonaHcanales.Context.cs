@@ -218,5 +218,14 @@ namespace DL
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllCuentas_Result>("GetAllCuentas");
         }
+    
+        public virtual int DeleteCuenta(Nullable<int> idCuenta)
+        {
+            var idCuentaParameter = idCuenta.HasValue ?
+                new ObjectParameter("IdCuenta", idCuenta) :
+                new ObjectParameter("IdCuenta", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("DeleteCuenta", idCuentaParameter);
+        }
     }
 }

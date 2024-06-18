@@ -53,7 +53,7 @@ namespace BLL
                         {
 
                             ML.Cuenta cuentaObj = new ML.Cuenta();
-                            cuentaObj.IdCuenta = registro.IdPersona;
+                            cuentaObj.IdCuenta = Convert.ToInt32(registro.IdCuenta);
                             cuentaObj.NumeroCuenta = (registro.NumeroCuenta == null) ? "N/A" : registro.NumeroCuenta;
 
                             //intanciar 
@@ -87,6 +87,35 @@ namespace BLL
 
         }
 
+
+        public static (bool, string, Exception) Delete(int IdCuenta)
+        {
+            try
+            {
+                using (DL.Ejercicio13JunioEntities context = new DL.Ejercicio13JunioEntities())
+                {
+
+
+                    int rowAffected = context.DeleteCuenta(IdCuenta);
+
+                    
+
+                    if (rowAffected > 0)
+                    {
+                        return (true, null, null);
+                    }
+                    else
+                    {
+                        return (false, "A ocurrido un error al eliminar el registro", null);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return (false, ex.Message, ex);
+            }
+           
+        }
 
     }
 }

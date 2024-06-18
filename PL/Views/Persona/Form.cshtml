@@ -4,10 +4,16 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    body {
+        background-color: #c5d7ff;
+    }
+</style>
+
+
 <div style="text-align:center;">
     <h2>Datos de la Persona</h2>
 </div>
-
 
 
 @using (Html.BeginForm("Form", "Persona", FormMethod.Post, new { id = "formulario_contacto", enctype = "multipart/form-data" }))
@@ -16,7 +22,7 @@
     <div style="display: flex; flex-wrap: wrap;" id="Form">
         <div style="flex-basis: 33.33%; padding: 5px;">
 
-      
+
 
             @Html.HiddenFor(model => model.IdPersona)
 
@@ -45,6 +51,16 @@
                 </div>
                 @Html.TextBoxFor(model => model.ApellidoMaterno)
             </div>
+
+
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="margin-bottom: 10px;">
+                    <label style="text-align: center;">
+                        @Html.LabelFor(model => model.Sexo)
+                    </label>
+                </div>
+                @Html.TextBoxFor(model => model.Sexo)
+            </div>
         </div>
 
         <div style="flex-basis: 33.33%; padding: 5px;">
@@ -54,7 +70,7 @@
                         @Html.LabelFor(model => model.FechaNacimineto)
                     </label>
                 </div>
-                @Html.TextBoxFor(model => model.FechaNacimineto, new { @class = "", @placeholder = "FechaNacimiento", @type = "date" })
+                @Html.TextBoxFor(model => model.FechaNacimineto, new { @class = "", @placeholder = "FechaNacimiento", @type = "date", @style = "width: 197px; height: 32px; padding: 2px;" })
             </div>
 
             <div style="display: flex; flex-direction: column; align-items: center;">
@@ -66,14 +82,6 @@
                 @Html.TextBoxFor(model => model.PaisOrigen)
             </div>
 
-            <div style="display: flex; flex-direction: column; align-items: center;">
-                <div style="margin-bottom: 10px;">
-                    <label style="text-align: center;">
-                        @Html.LabelFor(model => model.Sexo)
-                    </label>
-                </div>
-                @Html.TextBoxFor(model => model.Sexo)
-            </div>
         </div>
 
         <div style="flex-basis: 33.33%; padding: 5px;">
@@ -116,7 +124,8 @@
 
     </div>
 
-    <br />
+    <br/>
+
     @*<div style="text-align: center; margin-top: 20px;">
             <button type="submit" style="padding: 5px 60px; font-size: 16px;" class="btn btn-outline-primary btn-s">Save</button>
         </div>*@

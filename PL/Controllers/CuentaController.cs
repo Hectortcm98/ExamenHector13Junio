@@ -45,5 +45,18 @@ namespace PL.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost] 
+        public JsonResult Delete(int IdCuenta)
+        {
+            var result = BLL.Cuenta.Delete(IdCuenta);
+            if (result.Item1 == true)
+            {
+                
+                return Json(result.Item1, JsonRequestBehavior.AllowGet);
+            }
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+        
+
     }
 }

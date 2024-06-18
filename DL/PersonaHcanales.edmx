@@ -78,6 +78,9 @@
           <Parameter Name="Ocupacion" Type="varchar" Mode="In" />
           <Parameter Name="TipoPersonaFisica" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="DeleteCuenta" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdCuenta" Type="int" Mode="In" />
+        </Function>
         <Function Name="DeletePersonas" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="IdPersona" Type="int" Mode="In" />
           <Parameter Name="Nombre" Type="varchar" Mode="In" />
@@ -209,6 +212,9 @@
             <Parameter Name="IdPersona" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetAllCuentas" ReturnType="Collection(Ejercicio13JunioModel.GetAllCuentas_Result)" />
+          <FunctionImport Name="DeleteCuenta">
+            <Parameter Name="IdCuenta" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="GetAllPersona_Result">
           <Property Type="Int32" Name="IdPersona" Nullable="false" />
@@ -414,6 +420,7 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="DeleteCuenta" FunctionName="Ejercicio13JunioModel.Store.DeleteCuenta" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
